@@ -1,0 +1,67 @@
+#include <iostream>
+using namespace std;
+class TNode {
+public:
+ int data;
+ TNode *left, *right;
+ TNode(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+class BST {
+public:
+ TNode *root;
+ BST() : root(nullptr) {}
+void insert(TNode *&node, int val) {
+if (!node) node = new TNode(val);
+ else if (val < node->data) insert(node->left, val);
+ else insert(node->right, val);
+ }
+ bool search(TNode *node, int val) {
+ if (!node) return false;
+ if (node->data == val) return true;
+ return val < node->data ? search(node->left, val) : search(node->right, val);
+ }
+ void inOrder(TNode *node) {
+ if (node) {
+ inOrder(node->left);
+ cout << node->data << "
+inOrder(node->right);
+ }
+ }
+ int findMin(TNode *node) {
+ return node->left ? findMin(node->left) : node->data;
+ }
+ int findMax(TNode *node) {
+ return node->right ? findMax(node->right) : node->data;
+ }
+};
+void printPath(TNode *node, int val) {
+ if (!node) return;
+ cout << node->data << " ";
+ if (val < node->data) printPath(node->left, val);
+ else if (val > node->data) printPath(node->right, val);
+}
+int getSibling(TNode *parent, int val) {
+ if (!parent || !parent->left || !parent->right) return -1;
+ if (parent->left->data == val) return parent->right->data;
+ if (parent->right->data == val) return parent->left->data;
+ return -1;
+}
+int main() {
+ BST tree;
+ tree.insert(tree.root, 15);
+ tree.insert(tree.root, 10);
+ tree.insert(tree.root, 20);
+ tree.insert(tree.root, 8);
+ tree.insert(tree.root, 12);
+ cout << "In-order Traversal: ";
+ tree.inOrder(tree.root);
+cout << endl;
+ cout << "Path to 12: ";
+ printPath(tree.root, 12);
+ cout << endl;
+ cout << "Minimum: " << tree.findMin(tree.root) << endl;
+ cout << "Maximum: " << tree.findMax(tree.root) << endl;
+ TNode *root = tree.root;
+ cout << "Sibling of 8: " << getSibling(root->left, 8) << endl;
+ return 0;
+}
